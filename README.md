@@ -42,7 +42,7 @@ setInterval(() => {
 
 ### `rl.close()`
 
-還原被修改過的 `output.write` 與 `readline` 內部方法，並關閉 `readline` 介面。
+清除目前畫面上顯示的那一行（通常是提示字元），還原被修改過的 `output.write` 與 `readline` 內部方法，並關閉 `readline` 介面。即使是在 `"line"` 事件的非同步處理裡才呼叫（這時 `onLine` 可能已經自動重新顯示過提示字元），也不會留下殘留的畫面。
 
 ### 事件：`"line"`
 

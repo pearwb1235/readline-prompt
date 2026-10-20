@@ -2,6 +2,8 @@ import { describe, expect, it, jest } from "@jest/globals";
 import { PassThrough } from "stream";
 import ReadlinePrompt from "~/ReadlinePrompt";
 
+const CLEAR_LINE = "\x1b[2K";
+
 function createStreams() {
   const input = new PassThrough();
   const output = new PassThrough();
@@ -61,5 +63,48 @@ describe("ReadlinePrompt", () => {
 
     expect(chunks.join("")).toContain("background log");
     prompt.close();
+  });
+
+  it("clears the current prompt line when closed", () => {
+    const { input, output } = createStreams();
+    const prompt = new ReadlinePrompt({ input, output });
+    const chunks: string[] = [];
+    output.on("data", (chunk: Buffer) => chunks.push(chunk.toString()));
+
+    prompt.start();
+    chunks.length = 0; // 只關心 close() 本身寫了什麼
+
+    prompt.close();
+
+    expect(chunks.join("")).toContain(CLEAR_LINE);
+  });
+
+  it("clears the stale prompt when close() is called from an async line handler", async () => {
+    const { input, output } = createStreams();
+    const prompt = new ReadlinePrompt({ input, output });
+    const chunks: string[] = [];
+    output.on("data", (chunk: Buffer) => chunks.push(chunk.toString()));
+
+    let releaseHandler: () => void = () => {};
+    const gate = new Promise<void>((resolve) => {
+      releaseHandler = resolve;
+    });
+    prompt.on("line", async () => {
+      await gate; // 卡住，等測試自己決定什麼時候讓 close() 執行
+      prompt.close();
+    });
+
+    prompt.start();
+    input.write("exit\n");
+
+    // 此時 onLine 裡自動重新顯示提示字元那次呼叫已經跑完，
+    // 監聽器還卡在 gate 上，close() 尚未執行。
+    const clearCountBeforeClose = chunks.join("").split(CLEAR_LINE).length - 1;
+
+    releaseHandler();
+    await new Promise((resolve) => setImmediate(resolve));
+
+    const clearCountAfterClose = chunks.join("").split(CLEAR_LINE).length - 1;
+    expect(clearCountAfterClose).toBeGreaterThan(clearCountBeforeClose);
   });
 });

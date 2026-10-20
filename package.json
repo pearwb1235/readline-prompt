@@ -1,6 +1,6 @@
 {
   "name": "@pearwb/readline-prompt",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A readline prompt that survives background console/logger output without losing what you're typing.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

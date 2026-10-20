@@ -34,6 +34,10 @@ export default class ReadlinePrompt extends EventEmitter {
 
   close() {
     this.unpatchOutput();
+    if (this.rl) {
+      readline.clearLine(this.output, 0);
+      readline.cursorTo(this.output, 0);
+    }
     this.rl?.close();
     this.rl = undefined;
   }
