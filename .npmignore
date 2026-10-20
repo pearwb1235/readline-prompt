@@ -135,6 +135,11 @@ dist
 
 .tern-port
 
+# Local-only files/folders
+.local/
+*.local
+*.local.*
+
 # Publish File
 !dist
 
