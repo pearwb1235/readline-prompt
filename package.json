@@ -1,23 +1,51 @@
 {
-  "name": "Type your project name",
-  "version": "1.0.0",
-  "description": "",
-  "main": "src",
+  "name": "@pearwb/readline-prompt",
+  "version": "0.1.0",
+  "description": "A readline prompt that survives background console/logger output without losing what you're typing.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "ts-node src",
     "test": "lint-staged && jest --passWithNoTests",
     "prepare": "husky",
     "build": "npm run build:script && npm run build:alias",
     "build:script": "tsc -p tsconfig.build.json",
-    "build:alias": "tsc-alias -p tsconfig.build.json"
+    "build:alias": "tsc-alias -p tsconfig.build.json",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
+  "keywords": [
+    "readline",
+    "repl",
+    "cli",
+    "console",
+    "prompt",
+    "logger",
+    "stdin",
+    "stdout"
+  ],
   "author": {
     "name": "pearwb1235",
     "email": "pear.wb1235@gmail.com",
     "url": "https://github.com/pearwb1235"
   },
-  "license": "ISC",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pearwb1235/readline-prompt.git"
+  },
+  "homepage": "https://github.com/pearwb1235/readline-prompt#readme",
+  "bugs": {
+    "url": "https://github.com/pearwb1235/readline-prompt/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
