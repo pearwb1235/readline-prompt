@@ -1,2 +1,2 @@
-import sum from "~/sum";
-console.log("1 + 2 =", sum(1, 2));
+export { default, default as ReadlinePrompt } from "~/ReadlinePrompt";
+export type { ReadlinePromptOptions } from "~/ReadlinePrompt";
